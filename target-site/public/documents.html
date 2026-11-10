@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Management System // E Corp</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/terminal.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-wrap">
+                <a href="/" class="brand">
+                    <div class="brand-logo">E</div>
+                    <div class="brand-text">
+                        <h1>E CORP</h1>
+                        <p>DEFENSE &bull; CLOUD &bull; AUTONOMY</p>
+                    </div>
+                </a>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/">Overview</a></li>
+                        <li><a href="/about.html">About</a></li>
+                        <li><a href="/services.html">Services</a></li>
+                        <li><a href="/news.html">Intelligence</a></li>
+                        <li><a href="/documents.html" class="active">Documents</a></li>
+                        <li><a href="/portal.html">Portal</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="padding: 60px 20px;">
+        <div style="display: grid; grid-template-columns: 3fr 2fr; gap: 40px;">
+            <!-- DOCUMENT REPOSITORY (H02 Path Traversal) -->
+            <div>
+                <div class="section-header" style="text-align: left; margin-bottom: 24px;">
+                    <span class="section-tag">Enterprise Storage Node</span>
+                    <h2 class="section-title">CORPORATE DOCUMENT ARCHIVES</h2>
+                    <p style="color: var(--text-secondary); margin-top: 6px;">Select documents below for automated viewer streaming.</p>
+                </div>
+
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; margin-bottom: 30px;">
+                    <table style="width: 100%; border-collapse: collapse; font-size: 13px; text-align: left;">
+                        <thead style="background: #0d0f14; border-bottom: 1px solid var(--border-color); font-family: var(--font-mono); color: var(--accent-cyan);">
+                            <tr>
+                                <th style="padding: 12px 16px;">DOCUMENT NAME</th>
+                                <th style="padding: 12px 16px;">CLASSIFICATION</th>
+                                <th style="padding: 12px 16px; text-align: right;">ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody style="color: #c9d1d9;">
+                            <tr style="border-bottom: 1px solid #1a1e27;">
+                                <td style="padding: 14px 16px;"><strong>corporate_overview_2026.pdf</strong></td>
+                                <td style="padding: 14px 16px;"><span style="color: var(--accent-green);">Public</span></td>
+                                <td style="padding: 14px 16px; text-align: right;"><a href="/api/documents.php?file=corporate_overview_2026.pdf" target="_blank" class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;">VIEW / STREAM</a></td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #1a1e27;">
+                                <td style="padding: 14px 16px;"><strong>enterprise_arch_v3.pdf</strong></td>
+                                <td style="padding: 14px 16px;"><span style="color: #ffbd2e;">Internal</span></td>
+                                <td style="padding: 14px 16px; text-align: right;"><a href="/api/documents.php?file=enterprise_arch_v3.pdf" target="_blank" class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;">VIEW / STREAM</a></td>
+                            </tr>
+                            <tr style="border-bottom: 1px solid #1a1e27;">
+                                <td style="padding: 14px 16px;"><strong>infrastructure_q1_summary.pdf</strong></td>
+                                <td style="padding: 14px 16px;"><span style="color: var(--accent-red);">Confidential</span></td>
+                                <td style="padding: 14px 16px; text-align: right;"><a href="/api/documents.php?file=infrastructure_q1_summary.pdf" target="_blank" class="btn btn-outline" style="padding: 4px 10px; font-size: 11px;">VIEW / STREAM</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div style="background: #090a0d; border: 1px solid #1a1e27; padding: 16px; border-radius: 4px; font-family: var(--font-mono); font-size: 12px; color: #8b949e;">
+                    <strong>API Streaming Endpoint:</strong> <code>/api/documents.php?file=&lt;filename&gt;</code><br>
+                    Internal audit notice: Documents are referenced relative to the staging documents directory.
+                </div>
+            </div>
+
+            <!-- DOCUMENT UPLOAD SYSTEM (H05 File Upload) -->
+            <div>
+                <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 28px;">
+                    <span class="section-tag">Attachment Ingestion</span>
+                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 8px;">SUBMIT AUDIT ATTACHMENT</h3>
+                    <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">
+                        Upload external audit proof, career curriculum vitae, or compliance manifests.
+                    </p>
+
+                    <form id="upload-form" enctype="multipart/form-data">
+                        <div style="margin-bottom: 16px;">
+                            <label style="display: block; font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">SELECT ATTACHMENT (MAX 2MB)</label>
+                            <input type="file" id="file-input" name="attachment" required style="width: 100%; background: #090a0d; border: 1px dashed var(--border-color); padding: 20px; color: #8b949e; font-size: 12px; border-radius: 4px;">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">UPLOAD TO STAGING</button>
+                    </form>
+
+                    <div id="upload-result" style="margin-top: 16px; font-family: var(--font-mono); font-size: 12px;"></div>
+
+                    <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 14px; font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+                        Security Filter: Ingestion filter checks file extensions against blacklist before sandboxed ingestion into /uploads/.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <div>&copy; 2026 E Corp Corporation.</div>
+                <div>PROJECT: BLACKOUT</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('file-input');
+            const resultEl = document.getElementById('upload-result');
+            if (!fileInput.files[0]) return;
+
+            const formData = new FormData();
+            formData.append('attachment', fileInput.files[0]);
+
+            resultEl.innerHTML = '<span style="color:#00e5ff;">Uploading attachment to staging repo...</span>';
+
+            try {
+                const res = await fetch('/api/upload.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.status === 'success') {
+                    let html = `<div style="color:#00ff66; margin-bottom:4px;">✓ ${data.message}</div>`;
+                    html += `<div>Location: <code>${data.relative_url}</code></div>`;
+                    html += `<div><a href="${data.inspection_url}" target="_blank" style="color:#00e5ff; text-decoration:underline;">Inspect Attachment Verification Status</a></div>`;
+                    if (data.flag) {
+                        html += `<div style="margin-top:8px; background:#002200; border:1px solid #00ff66; padding:8px; color:#00ff66;"><strong>FLAG:</strong> <code>${data.flag}</code></div>`;
+                    }
+                    resultEl.innerHTML = html;
+                } else {
+                    resultEl.innerHTML = `<span style="color:#ff3344;">✗ ${data.message}</span>`;
+                }
+            } catch (err) {
+                resultEl.innerHTML = '<span style="color:#ff3344;">Network upload failed.</span>';
+            }
+        });
+    </script>
+</body>
+</html>

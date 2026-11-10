@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  target-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: blackout-target-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    environment:
+      - DB_DRIVER=mysql
+      - DB_HOST=target-db
+      - DB_PORT=3306
+      - DB_NAME=ecorp_db
+      - DB_USER=ecorp_user
+      - DB_PASS=EcorpSec2026!Pass
+      - SSRF_SERVICE_HOST=mock-internal
+      - SSRF_SERVICE_PORT=8080
+    networks:
+      - target-public-net
+      - target-internal-net
+    depends_on:
+      - target-db
+      - mock-internal
+
+  target-db:
+    image: mariadb:10.11
+    container_name: blackout-target-db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=RootSecret2026!Pass
+      - MYSQL_DATABASE=ecorp_db
+      - MYSQL_USER=ecorp_user
+      - MYSQL_PASSWORD=EcorpSec2026!Pass
+    volumes:
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql:ro
+    networks:
+      - target-internal-net
+
+  mock-internal:
+    build:
+      context: ./challenge-services/ssrf
+      dockerfile: Dockerfile
+    container_name: blackout-mock-internal
+    restart: unless-stopped
+    environment:
+      - SSRF_PORT=8080
+      - FLAG_A01=Flagfound{internal_affairs_728}
+    networks:
+      - target-internal-net
+    # Port 8080 is NOT exposed to host, only reachable via target-internal-net
+
+networks:
+  target-public-net:
+    driver: bridge
+  target-internal-net:
+    internal: true

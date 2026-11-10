@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Environment
+.env
+.venv/
+env/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Docker (not needed on Render)
+# docker-compose.yml
+
+# Documentation - KEEP PRIVATE (do not expose to participants)
+documentation/private-walkthroughs/
+
+# Challenge secrets — PHP flag registry (flags are in start_local.py server logic)
+target-site/challenge-secrets/flags.php
+
+# Tests (not needed in production)
+tests/__pycache__/

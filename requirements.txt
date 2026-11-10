@@ -1,0 +1,3 @@
+# PROJECT: BLACKOUT — Python Dependencies
+# No external dependencies required — uses Python standard library only
+# This file is required by Render for Python Web Service detection

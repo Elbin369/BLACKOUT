@@ -1,0 +1,11 @@
+# E CORP GLOBAL CRAWLER DIRECTIVES
+# CLASSIFICATION: PUBLIC-FACING WEB PERIMETER
+User-agent: *
+Disallow: /hidden-9821/
+Disallow: /dev-portal-v1/
+Disallow: /uploads/
+Disallow: /challenge-secrets/
+Disallow: /api/admin/
+
+# Internal Sitemap
+# Sitemap: http://localhost/sitemap.xml

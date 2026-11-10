@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact & Security Operations // E Corp</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/terminal.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-wrap">
+                <a href="/" class="brand">
+                    <div class="brand-logo">E</div>
+                    <div class="brand-text">
+                        <h1>E CORP</h1>
+                        <p>DEFENSE &bull; CLOUD &bull; AUTONOMY</p>
+                    </div>
+                </a>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/">Overview</a></li>
+                        <li><a href="/about.html">About</a></li>
+                        <li><a href="/services.html">Services</a></li>
+                        <li><a href="/news.html">Intelligence</a></li>
+                        <li><a href="/documents.html">Documents</a></li>
+                        <li><a href="/portal.html">Portal</a></li>
+                        <li><a href="/contact.html" class="active">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="padding: 60px 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px;">
+            <!-- CONTACT DETAILS -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 32px;">
+                <span class="section-tag">Global Communications</span>
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">INCIDENT & SOC ESCALATION</h3>
+                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 24px;">For mission-critical infrastructure emergencies or operational inquiries.</p>
+
+                <div style="font-family: var(--font-mono); font-size: 13px; line-height: 2.2; color: #c9d1d9;">
+                    <div>📞 <strong>SOC 24/7 Hotline:</strong> +1 (800) 555-0199</div>
+                    <div>✉️ <strong>Emergency PGP:</strong> secops@ecorp.corp</div>
+                    <div>🏢 <strong>Headquarters:</strong> E Corp Tower, Financial District, NY</div>
+                    <div>🔒 <strong>Clearance Verification:</strong> clearance-check@ecorp.corp</div>
+                </div>
+            </div>
+
+            <!-- INTEGRATION / WEBHOOK TESTER (A01 SSRF Vector) -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 32px;">
+                <span class="section-tag">Partner Infrastructure</span>
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">REMOTE INTEGRATION & WEBHOOK PROBE</h3>
+                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">
+                    Test partner webhook connectivity and health endpoints via our egress proxy.
+                </p>
+
+                <form id="webhook-form" style="display: flex; flex-direction: column; gap: 12px;">
+                    <div>
+                        <label style="display: block; font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 4px;">TARGET PROBE URL (HTTP / HTTPS)</label>
+                        <input type="text" id="webhook-url" value="http://127.0.0.1:8080/health" required style="width: 100%; background: #0a0b0e; border: 1px solid var(--border-color); padding: 10px 14px; color: #fff; font-family: var(--font-mono); font-size: 13px; border-radius: 4px;">
+                    </div>
+                    <button type="submit" class="btn btn-outline">DISPATCH PROBE REQUEST</button>
+                </form>
+
+                <div id="webhook-result" style="margin-top: 16px; background: #090a0d; border: 1px solid #1a1e27; border-radius: 4px; padding: 12px; font-family: var(--font-mono); font-size: 11px; max-height: 200px; overflow-y: auto; color: #8b949e;">
+                    Awaiting probe dispatch...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <div>&copy; 2026 E Corp Corporation.</div>
+                <div>PROJECT: BLACKOUT</div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('webhook-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('webhook-url').value;
+            const resEl = document.getElementById('webhook-result');
+            resEl.textContent = `Dispatching HTTP GET to ${url} via /api/fetch.php...`;
+
+            try {
+                const res = await fetch(`/api/fetch.php?url=${encodeURIComponent(url)}`);
+                const data = await res.json();
+                resEl.textContent = JSON.stringify(data, null, 2);
+            } catch (err) {
+                resEl.textContent = 'Error executing webhook fetch request.';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+[CONFIDENTIAL INTERNAL E CORP ARCHIVE FILE - LEVEL 4 CLEARANCE]
+FILE ID: EC-SEC-2026-9921
+CLASSIFICATION: RESTRICTED // EYES ONLY
+SUBJECT: CORE SYSTEM VULNERABILITY AUDIT
+
+Incident Summary:
+During the Q3 penetration assessment, an unauthorized traversal pattern was detected across the legacy document retrieval service.
+
+Associated Flag Token:
+Flagfound{shadow_directory_219}
+
+Security directive: Restrict all path variables and sanitize ../ sequences immediately.

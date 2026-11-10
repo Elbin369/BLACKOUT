@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelligence & Press Releases // E Corp</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/terminal.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-wrap">
+                <a href="/" class="brand">
+                    <div class="brand-logo">E</div>
+                    <div class="brand-text">
+                        <h1>E CORP</h1>
+                        <p>DEFENSE &bull; CLOUD &bull; AUTONOMY</p>
+                    </div>
+                </a>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/">Overview</a></li>
+                        <li><a href="/about.html">About</a></li>
+                        <li><a href="/services.html">Services</a></li>
+                        <li><a href="/news.html" class="active">Intelligence</a></li>
+                        <li><a href="/documents.html">Documents</a></li>
+                        <li><a href="/portal.html">Portal</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="padding: 60px 20px;">
+        <div class="section-header" style="text-align: left; margin-bottom: 40px;">
+            <span class="section-tag">Security Advisory & Press Repository</span>
+            <h2 class="section-title">GLOBAL THREAT INTELLIGENCE & NEWS</h2>
+            <p style="color: var(--text-secondary); margin-top: 8px;">Explore technical briefings, architectural whitepapers, and operational disclosures.</p>
+        </div>
+
+        <!-- SEARCH FORM (H01 SQL Injection Vector) -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 24px; margin-bottom: 40px;">
+            <div style="font-family: var(--font-mono); font-size: 12px; color: var(--accent-cyan); margin-bottom: 10px;">INTELLIGENCE DATABASE ARCHIVE SEARCH</div>
+            <form id="news-search-form" style="display: flex; gap: 10px;">
+                <input type="text" id="news-search-input" placeholder="Query news database by keyword, topic, or parameter..." style="flex: 1; background: #090a0d; border: 1px solid var(--border-color); padding: 12px 16px; color: #fff; font-family: var(--font-mono); font-size: 13px; border-radius: 4px;">
+                <button type="submit" class="btn btn-primary">SEARCH</button>
+            </form>
+            <div style="font-size: 11px; color: var(--text-muted); margin-top: 8px; font-family: var(--font-mono);">Endpoint: /api/news.php?search=...</div>
+        </div>
+
+        <!-- RESULTS / ARTICLES CONTAINER -->
+        <div id="news-articles-list">
+            <!-- Loaded dynamically via ecorp-core.js and on search -->
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <div>&copy; 2026 E Corp Corporation.</div>
+                <div>PROJECT: BLACKOUT</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/assets/js/ecorp-core.js"></script>
+    <script>
+        document.getElementById('news-search-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const q = document.getElementById('news-search-input').value;
+            const container = document.getElementById('news-articles-list');
+            container.innerHTML = '<div class="p-6 text-gray-400 font-mono">Executing query against intelligence database...</div>';
+
+            try {
+                const res = await fetch(`/api/news.php?search=${encodeURIComponent(q)}`);
+                const data = await res.json();
+                if (data.status === 'success' && data.articles) {
+                    if (data.articles.length === 0) {
+                        container.innerHTML = '<div class="p-6 text-gray-500 font-mono">0 articles found matching search criteria.</div>';
+                        return;
+                    }
+                    container.innerHTML = data.articles.map(art => `
+                        <article class="p-6 bg-card border border-border rounded mb-6">
+                            <span class="text-xs text-green-400 uppercase font-mono tracking-wider">${art.category || 'Database Record'}</span>
+                            <h3 class="text-xl font-bold text-white mt-1 mb-2">${art.title || 'Untitled Record'}</h3>
+                            <p class="text-sm text-gray-300 mb-4">${art.content || art.summary || ''}</p>
+                            <div class="text-xs text-gray-500 font-mono">Author: ${art.author || 'N/A'} | ID: ${art.id || ''}</div>
+                        </article>
+                    `).join('');
+                } else if (data.status === 'database_error') {
+                    container.innerHTML = `<div class="p-4 bg-red-950/40 border border-red-500 text-red-300 font-mono text-xs rounded">${data.message}</div>`;
+                }
+            } catch (err) {
+                container.innerHTML = '<div class="p-6 text-red-400 font-mono">Error querying news API.</div>';
+            }
+        });
+    </script>
+</body>
+</html>

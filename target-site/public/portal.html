@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E Corp Employee & Customer Portal</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/terminal.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="nav-wrap">
+                <a href="/" class="brand">
+                    <div class="brand-logo">E</div>
+                    <div class="brand-text">
+                        <h1>E CORP</h1>
+                        <p>DEFENSE &bull; CLOUD &bull; AUTONOMY</p>
+                    </div>
+                </a>
+                <nav class="main-nav">
+                    <ul>
+                        <li><a href="/">Overview</a></li>
+                        <li><a href="/about.html">About</a></li>
+                        <li><a href="/services.html">Services</a></li>
+                        <li><a href="/news.html">Intelligence</a></li>
+                        <li><a href="/documents.html">Documents</a></li>
+                        <li><a href="/portal.html" class="active">Portal</a></li>
+                        <li><a href="/contact.html">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="padding: 60px 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 60px;">
+            <!-- SSO LOGIN FORM (M07 Broken Login) -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 32px;">
+                <span class="section-tag">Identity Gateway</span>
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">SINGLE SIGN-ON AUTHENTICATION</h3>
+                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 24px;">Enter enterprise corporate credentials to access internal systems.</p>
+
+                <form id="login-form">
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">USERNAME / IDENTIFIER</label>
+                        <input type="text" id="login-username" required style="width: 100%; background: #0a0b0e; border: 1px solid var(--border-color); padding: 10px 14px; color: #fff; font-family: var(--font-mono); font-size: 13px; border-radius: 4px;" placeholder="e.g. johndoe">
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-family: var(--font-mono); font-size: 12px; color: var(--text-secondary); margin-bottom: 6px;">ACCESS KEY / PASSWORD</label>
+                        <input type="password" id="login-password" required style="width: 100%; background: #0a0b0e; border: 1px solid var(--border-color); padding: 10px 14px; color: #fff; font-family: var(--font-mono); font-size: 13px; border-radius: 4px;" placeholder="••••••••••••">
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">AUTHENTICATE</button>
+                    <div id="login-feedback"></div>
+                </form>
+
+                <div style="margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-color); font-size: 12px; color: var(--text-muted);">
+                    Authorized personnel only. All session handshakes are cryptographically logged.
+                </div>
+            </div>
+
+            <!-- EMPLOYEE DOSSIER LOOKUP (M01 IDOR) -->
+            <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 32px;">
+                <span class="section-tag">Staff Services</span>
+                <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">EMPLOYEE PROFILE LOOKUP</h3>
+                <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 24px;">Inspect active personnel record information by directory identifier.</p>
+
+                <div style="display: flex; gap: 8px; margin-bottom: 20px;">
+                    <input type="number" id="profile-id-input" value="1" min="1" max="999" style="width: 120px; background: #0a0b0e; border: 1px solid var(--border-color); padding: 10px 14px; color: #fff; font-family: var(--font-mono); font-size: 13px; border-radius: 4px;">
+                    <button onclick="fetchProfile()" class="btn btn-outline">LOAD PROFILE</button>
+                </div>
+
+                <div id="profile-result" style="background: #090a0d; border: 1px solid #1a1e27; border-radius: 4px; padding: 16px; font-family: var(--font-mono); font-size: 12px; min-height: 140px; color: #8b949e;">
+                    Click "Load Profile" to inspect record #1...
+                </div>
+            </div>
+        </div>
+
+        <!-- FEEDBACK & MODERATION SECTION (H03 Stored XSS) -->
+        <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 6px; padding: 32px;">
+            <span class="section-tag">Internal Communications</span>
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 8px;">EMPLOYEE INCIDENT & FEEDBACK CHANNEL</h3>
+            <p style="color: var(--text-secondary); font-size: 13px; margin-bottom: 20px;">
+                Submit operational feedback for SOC moderator evaluation. Submissions enter the automated moderator triage queue.
+            </p>
+
+            <form id="feedback-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                <div>
+                    <input type="text" id="fb-name" placeholder="Your Name / Codename" required style="width: 100%; background: #0a0b0e; border: 1px solid var(--border-color); padding: 10px; color: #fff; font-family: var(--font-mono); font-size: 13px; border-radius: 4px;">
+                </div>
+                <div>
+                    <input type="email" id="fb-email" placeholder="Corporate Email" required style="width: 100%; background: #0a0b0e; border: 1px solid var(--border-color); padding: 10px; color: #fff; font-family: var(--font-mono); font-size: 13px; border-radius: 4px;">
+                </div>
+                <div style="grid-column: span 2;">
+                    <textarea id="fb-comment" rows="3" placeholder="Enter feedback, technical notes, or operational report..." required style="width: 100%; background: #0a0b0e; border: 1px solid var(--border-color); padding: 10px; color: #fff; font-family: var(--font-mono); font-size: 13px; border-radius: 4px;"></textarea>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-outline">TRANSMIT FEEDBACK</button>
+                </div>
+                <div style="text-align: right;">
+                    <a href="/api/feedback.php?action=moderator_review" class="text-xs text-yellow-400 font-mono hover:underline" style="display: inline-block; padding-top: 10px;">[INSPECT SOC MODERATOR REVIEW QUEUE]</a>
+                </div>
+            </form>
+            <div id="fb-result" style="font-family: var(--font-mono); font-size: 12px; margin-top: 8px;"></div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <div>&copy; 2026 E Corp Corporation.</div>
+                <div>PROJECT: BLACKOUT</div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/assets/js/ecorp-core.js"></script>
+    <script>
+        async function fetchProfile() {
+            const id = document.getElementById('profile-id-input').value;
+            const resEl = document.getElementById('profile-result');
+            resEl.textContent = `Fetching profile from /api/employees.php?id=${id}...`;
+            try {
+                const res = await fetch(`/api/employees.php?id=${id}`);
+                const data = await res.json();
+                if (data.status === 'success' && data.profile) {
+                    const p = data.profile;
+                    let html = `<div><strong>EMPLOYEE:</strong> ${p.first_name} ${p.last_name} (${p.employee_code})</div>`;
+                    html += `<div><strong>TITLE:</strong> ${p.title}</div>`;
+                    html += `<div><strong>DEPARTMENT:</strong> ${p.department}</div>`;
+                    html += `<div><strong>BADGE:</strong> ${p.badge_id}</div>`;
+                    html += `<div><strong>CLEARANCE:</strong> Level ${p.clearance_level}</div>`;
+                    html += `<div style="margin-top:8px; color:#fff;"><strong>DOSSIER BIO:</strong><br>${p.profile_bio || 'None'}</div>`;
+                    if (data.flag) {
+                        html += `<div style="margin-top:10px; background:#002200; border:1px solid #00ff66; padding:8px; color:#00ff66;"><strong>FLAG FOUND:</strong> <code>${data.flag}</code></div>`;
+                    }
+                    resEl.innerHTML = html;
+                } else {
+                    resEl.innerHTML = `<span style="color:#ff3344;">Error: ${data.message || 'Profile record not found.'}</span>`;
+                }
+            } catch (e) {
+                resEl.innerHTML = `<span style="color:#ff3344;">Network error querying employee API.</span>`;
+            }
+        }
+        window.addEventListener('DOMContentLoaded', () => fetchProfile());
+    </script>
+</body>
+</html>
