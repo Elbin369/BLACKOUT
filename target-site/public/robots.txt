@@ -6,6 +6,7 @@ Disallow: /dev-portal-v1/
 Disallow: /uploads/
 Disallow: /challenge-secrets/
 Disallow: /api/admin/
+Disallow: /hidden-9821/
 
 # Internal Sitemap
 # Sitemap: http://localhost/sitemap.xml

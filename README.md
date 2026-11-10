@@ -1,90 +1,110 @@
 # PROJECT: BLACKOUT
 
-### WEB EXPLOITATION CTF 2026
-*"Every system has a weakness. Find yours."*
+Web exploitation CTF target environment for the fictional E CORP corporate website.
 
----
+"Every system has a weakness. Find yours."
 
-## Executive Overview
-**PROJECT: BLACKOUT** is a professional, production-grade web exploitation Capture The Flag (CTF) target platform.
-Participants receive a single target corporate website (`E CORP`) and must conduct a realistic penetration assessment across realistic corporate pages, APIs, endpoints, and client-side assets to discover and exploit 20 deliberately introduced vulnerabilities.
+## Overview
+PROJECT: BLACKOUT is a deliberately vulnerable web application designed for realistic CTF-style exploitation practice. The challenge environment simulates a corporate website with public pages, private APIs, hidden directories, legacy portals, and an internal SSRF-only service.
 
-- **Total Challenges:** Exactly 20
-- **Difficulty Distribution:** 3 Easy, 7 Medium, 5 Hard, 5 Advanced
-- **Total Points Pool:** 3,350 Points
-- **Flag Format:** `Flagfound{...}`
-- **Entry Point:** Root URL `http://TARGET-IP/` automatically loads `index.html`. No special CTF routes or spoilers.
+The repository includes:
+- a vulnerable frontend for E CORP
+- a local Python runner for quick testing
+- a Docker Compose setup for multi-container deployment
+- 20 intentionally planted vulnerabilities across Easy, Medium, Hard, and Advanced tiers
 
----
+## Challenge summary
+- Total challenges: 20
+- Difficulty split: 3 Easy, 7 Medium, 5 Hard, 5 Advanced
+- Total points pool: 3,350
+- Flag format: `Flagfound{...}`
+- Entry point: the site loads `target-site/public/index.html` by default
 
-## Directory Architecture
-```
-project-blackout/
-├── target-site/                        # Vulnerable E Corp corporate website
-│   ├── public/                         # Public web root (opens index.html)
-│   │   ├── index.html                  # Main entry point & terminal simulation (E01)
-│   │   ├── about.html                  # Corporate overview & leadership bios
-│   │   ├── services.html               # Enterprise services tier (M02)
-│   │   ├── news.html                   # Intelligence news search (H01)
-│   │   ├── documents.html              # Corporate documents & uploads (H02, H05)
-│   │   ├── portal.html                 # SSO login & employee profiles (M01, M07, H03)
-│   │   ├── contact.html                # SOC contact & webhook tester (A01)
-│   │   ├── robots.txt                  # Crawler exclusion file (E02)
-│   │   ├── hidden-9821/                # Restricted report directory (E02)
-│   │   ├── dev-portal-v1/              # Unlinked legacy portal (M03)
-│   │   ├── assets/                     # CSS, JS, and image assets
-│   │   └── api/                        # Backend REST & challenge endpoints
-│   ├── application/                    # DB handlers, JWT, helpers, config
-│   ├── challenge-services/             # Isolated SSRF microservice (A01)
-│   ├── challenge-secrets/              # Central flag registry (OUTSIDE web root)
-│   ├── database/                       # MariaDB / SQLite schema and synthetic seed
-│   ├── Dockerfile                      # Target container definition
-│   └── docker-compose.yml              # Target environment orchestration
-├── documentation/                      # Complete operational manuals
-│   ├── installation.md                 # Ubuntu & Docker setup guide
-│   ├── deployment.md                   # Master deployment instructions
-│   ├── participant-guide.md            # Participant field manual
-│   ├── organizer-guide.md              # Organizer event administration manual
-│   ├── testing.md                      # Comprehensive testing report
-│   ├── troubleshooting.md              # Troubleshooting guide & FAQs
-│   └── private-walkthroughs/           # 20 Individual private challenge walkthroughs
-├── tests/                              # Verification test suites
-│   ├── test_in_memory.py               # Zero-network full challenge verification test
-│   └── test_all_challenges.py          # HTTP end-to-end exploit runner
-├── start_local.py                      # Local instant runner (Python)
-└── docker-compose.yml                  # Root orchestration for deployment
+## Repository layout
+```text
+BLACKOUT/
+├── README.md
+├── docker-compose.yml                # Root deployment orchestrator
+├── render.yaml                       # Render hosting config
+├── requirements.txt                  # Python dependencies
+├── start_local.py                    # Local runner for the vulnerable target
+├── target-site/
+│   ├── Dockerfile                    # Target app container
+│   ├── docker-compose.yml            # Inner target setup
+│   ├── public/                       # Browser-facing web root
+│   │   ├── index.html                # Main landing page / terminal UI
+│   │   ├── about.html                # Corporate overview
+│   │   ├── services.html             # Pricing / service tier pages
+│   │   ├── news.html                 # Search and intelligence content
+│   │   ├── documents.html            # File/document challenge area
+│   │   ├── portal.html               # Login / profile surfaces
+│   │   ├── contact.html              # SOC contact and SSRF-related test page
+│   │   ├── robots.txt                # Crawling instructions / god mode clue
+│   │   ├── hidden-9821/              # Hidden directory challenge path
+│   │   ├── dev-portal-v1/            # Unlinked legacy portal
+│   │   ├── assets/                  # CSS, JS, and static client assets
+│   │   └── api/                     # Vulnerable backend endpoints
+│   ├── application/                  # PHP config, DB, JWT helpers
+│   ├── challenge-services/           # Isolated internal microservice
+│   │   └── ssrf/
+│   ├── challenge-secrets/            # Hidden flag registry and protected files
+│   └── database/                     # SQL schema and seed data
+└── .gitignore
 ```
 
----
+## Quick start
 
-## Quick Start (Production Deployment)
-
-### 1. Launch via Docker Compose
+### Option 1: Local runner
 From the repository root:
+
+```bash
+python start_local.py
+```
+
+This starts a lightweight local HTTP server and serves the target site at:
+
+```text
+http://localhost:8080/
+```
+
+### Option 2: Docker Compose deployment
+From the repository root:
+
 ```bash
 docker compose up -d --build
 ```
 
-### 2. Verify Access
-- **Target Corporate Website:** `http://<TARGET-IP>/` (Directly loads `index.html`)
+Then browse to the deployed target app at:
 
-### 3. Local Test Execution
-```bash
-python start_local.py
+```text
+http://<TARGET-IP>/
 ```
-Or run the zero-network automated verification test suite:
-```bash
-python tests/test_in_memory.py
+
+If you're running locally with Docker Desktop, this usually resolves to:
+
+```text
+http://localhost/
 ```
-Outputs the verification matrix confirming 20 / 20 passing challenge exploits and 3,350 total points.
 
----
+## Notes on usage
+- The project is intentionally vulnerable and should be used for training, practice, or controlled CTF-style exploitation.
+- Flag values follow the `Flagfound{...}` format.
+- The app is designed to be explored in-browser without any special challenge route or hidden launcher.
+- No network privilege or external service is required for core local use.
 
-## Documentation Links
-- [Installation Guide](file:///documentation/installation.md)
-- [Deployment Guide](file:///documentation/deployment.md)
-- [Participant Field Manual](file:///documentation/participant-guide.md)
-- [Organizer Marshal Guide](file:///documentation/organizer-guide.md)
-- [Testing Report (100% Pass)](file:///documentation/testing.md)
-- [Troubleshooting & FAQs](file:///documentation/troubleshooting.md)
-- [Private Challenge Walkthroughs (E01 to A05)](file:///documentation/private-walkthroughs/)
+## Intended workflow
+1. Start the target environment.
+2. Browse the E CORP website like a user.
+3. Explore public pages, hidden directories, and API endpoints.
+4. Trace the vulnerability chain from frontend behavior to backend logic.
+5. Recover the underlying flag for each challenge.
+
+## Files worth knowing
+- `start_local.py` — local runner with embedded challenge logic and flag registry
+- `target-site/public/api/` — challenge API endpoints and vulnerable backend behavior
+- `target-site/database/schema.sql` — database schema used by the target app
+- `target-site/challenge-secrets/flags.php` — central flag store for the challenge set
+- `target-site/challenge-services/ssrf/server.py` — isolated SSRF target used by a challenge
+
+## License and use
+This repository is intended for educational and laboratory use. Use it in a controlled environment only.
